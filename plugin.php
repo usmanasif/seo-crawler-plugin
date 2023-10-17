@@ -15,8 +15,9 @@
  */
 
 namespace ROCKET_WP_CRAWLER;
+
 if ( ! defined( 'WPINC' ) ) {
-    die;
+	die;
 }
 define( 'ROCKET_CRWL_PLUGIN_FILENAME', __FILE__ ); // Filename of the plugin, including the file.
 
@@ -37,9 +38,9 @@ require_once plugin_dir_path( __FILE__ ) . 'src/admin/seo-link-checker-admin.php
  * @return void
  */
 function wpc_crawler_plugin_init() {
-    SEO_Link_Checker_Admin::get_instance();
+	SEO_Link_Checker_Admin::get_instance();
 	$wpc_crawler_plugin = new Rocket_Wpc_Plugin_Class();
-    $wpc_crawler_plugin->run();
+	$wpc_crawler_plugin->run();
 }
 add_action( 'plugins_loaded', __NAMESPACE__ . '\wpc_crawler_plugin_init' );
 

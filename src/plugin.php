@@ -51,7 +51,7 @@ class Rocket_Wpc_Plugin_Class {
 		}
 		$plugin = isset( $_REQUEST['plugin'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) : '';
 		check_admin_referer( "deactivate-plugin_{$plugin}" );
-        $this->unschedule_crawl();
+		$this->unschedule_crawl();
 	}
 
 	/**
@@ -67,43 +67,65 @@ class Rocket_Wpc_Plugin_Class {
 		}
 	}
 
-    public function run()
-    {
-        add_action('admin_menu', array($this, 'add_admin_menu'));
-        add_action('admin_enqueue_scripts', array($this, 'enqueue_styles'));
-    }
+	/**
+	 * Initialize the plugin by setting up hooks.
+	 *
+	 * @return void
+	 */
+	public function run() {
+		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+	}
 
-    public function add_admin_menu()
-    {
-        add_menu_page('SEO Crawler', 'SEO Crawler', 'manage_options', 'seo-crawler',  array($this, 'display_admin_page'));
+	/**
+	 * Add admin menu for the plugin.
+	 *
+	 * @return void
+	 */
+	public function add_admin_menu() {
+		add_menu_page( 'SEO Crawler', 'SEO Crawler', 'manage_options', 'seo-crawler', array( $this, 'display_admin_page' ) );
+	}
 
-    }
+	/**
+	 * Schedule the crawl event.
+	 *
+	 * @return void
+	 */
+	public static function schedule_crawl() {
+		if ( ! wp_next_scheduled( 'seo_link_checker_cron' ) ) {
+			wp_schedule_event( time(), 'hourly', 'seo_link_checker_cron' );
+		}
+	}
 
-    public static function schedule_crawl()
-    {
-        if (!wp_next_scheduled('seo_link_checker_cron')) {
-            wp_schedule_event(time(), 'hourly', 'seo_link_checker_cron');
-        }
-    }
+	/**
+	 * Unschedule the crawl event.
+	 *
+	 * @return void
+	 */
+	public function unschedule_crawl() {
+		$timestamp = wp_next_scheduled( 'seo_link_checker_cron' );
+		if ( $timestamp ) {
+			wp_unschedule_event( $timestamp, 'seo_link_checker_cron' );
+		}
+	}
 
-    public function unschedule_crawl()
-    {
-        $timestamp = wp_next_scheduled('seo_link_checker_cron');
-        if ($timestamp) {
-            wp_unschedule_event($timestamp, 'seo_link_checker_cron');
-        }
-    }
+	/**
+	 * Display the admin page.
+	 *
+	 * @return void
+	 */
+	public function display_admin_page() {
+		require_once plugin_dir_path( __DIR__ ) . 'src/admin/seo-link-checker-admin.php';
+		$admin_page = SEO_Link_Checker_Admin::get_instance();
+		$admin_page->display();
+	}
 
-    public function display_admin_page()
-    {
-        require_once plugin_dir_path(dirname(__FILE__)) . 'src/admin/seo-link-checker-admin.php';
-        $admin_page = SEO_Link_Checker_Admin::get_instance();
-        $admin_page->display();
-    }
-
-    public function enqueue_styles()
-    {
-        wp_enqueue_style('results-table-style', plugin_dir_url(__FILE__) . 'css/style.css');
-    }
-
+	/**
+	 * Enqueue styles for the admin page.
+	 *
+	 * @return void
+	 */
+	public function enqueue_styles() {
+		wp_enqueue_style( 'results-table-style', plugin_dir_url( __FILE__ ) . 'css/style.css', array(), '1.0.0' );
+	}
 }

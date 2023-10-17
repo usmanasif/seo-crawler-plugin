@@ -32,7 +32,7 @@ class SEO_Link_Checker_Admin
         $results = get_option($this->results_option_name);
         if($results){
             $c = unserialize($results);
-            echo '<h4>Last Crawl: </h4> <p>'.$c["crawl_time"].'</p>';
+            echo '<p><strong>Last Crawl: </strong>'.$c["crawl_time"].'</p>';
             $results = unserialize($c["links"]);
 
             echo '<table>';
@@ -52,7 +52,7 @@ class SEO_Link_Checker_Admin
             echo '<p>No crawl results available.</p>';
         }
         echo '<form method="post" name="init_crawl" action="">
-                <input type="submit" value="Initiate Crawl" class="initate-crawl" name="init_crawl">
+                <input type="submit" value="Initiate Crawl" class="initate-crawl-btn" name="init_crawl">
               </form>';
     }
 

@@ -2,9 +2,9 @@
 /**
  * Plugin main class
  *
- * @package     TO FILL
- * @since       TO FILL
- * @author      Mathieu Lamiot
+ * @package     SEO Crawler
+ * @since       October, 2023
+ * @author      Usman Asif
  * @license     GPL-2.0-or-later
  */
 
@@ -65,4 +65,17 @@ class Rocket_Wpc_Plugin_Class {
 			return;
 		}
 	}
+
+    public function run()
+    {
+        add_action('admin_menu', array($this, 'add_admin_menu'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_styles'));
+    }
+
+    public function add_admin_menu()
+    {
+        add_menu_page('SEO Crawler', 'SEO Crawler', 'manage_options', 'seo-crawler',  array($this, 'display_admin_page'));
+
+    }
+
 }

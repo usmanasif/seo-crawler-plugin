@@ -78,4 +78,16 @@ class Rocket_Wpc_Plugin_Class {
 
     }
 
+    public function display_admin_page()
+    {
+        require_once plugin_dir_path(dirname(__FILE__)) . 'src/admin/seo-link-checker-admin.php';
+        $admin_page = SEO_Link_Checker_Admin::get_instance();
+        $admin_page->display();
+    }
+
+    public function enqueue_styles()
+    {
+        wp_enqueue_style('results-table-style', plugin_dir_url(__FILE__) . 'css/style.css');
+    }
+
 }

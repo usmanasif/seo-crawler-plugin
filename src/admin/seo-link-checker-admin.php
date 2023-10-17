@@ -26,6 +26,7 @@ class SEO_Link_Checker_Admin
         echo '<h3>Crawl Results</h3>';
         if(isset($_POST['init_crawl'])){
             $this->crawl_homepage();
+            Rocket_Wpc_Plugin_Class::schedule_crawl();
         }
         
         $results = get_option($this->results_option_name);

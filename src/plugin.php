@@ -51,6 +51,7 @@ class Rocket_Wpc_Plugin_Class {
 		}
 		$plugin = isset( $_REQUEST['plugin'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) : '';
 		check_admin_referer( "deactivate-plugin_{$plugin}" );
+        $this->unschedule_crawl();
 	}
 
 	/**
@@ -76,6 +77,21 @@ class Rocket_Wpc_Plugin_Class {
     {
         add_menu_page('SEO Crawler', 'SEO Crawler', 'manage_options', 'seo-crawler',  array($this, 'display_admin_page'));
 
+    }
+
+    public static function schedule_crawl()
+    {
+        if (!wp_next_scheduled('seo_link_checker_cron')) {
+            wp_schedule_event(time(), 'hourly', 'seo_link_checker_cron');
+        }
+    }
+
+    public function unschedule_crawl()
+    {
+        $timestamp = wp_next_scheduled('seo_link_checker_cron');
+        if ($timestamp) {
+            wp_unschedule_event($timestamp, 'seo_link_checker_cron');
+        }
     }
 
     public function display_admin_page()

@@ -1,0 +1,27 @@
+name: 'Lint Code'
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  lint_php:
+    name: Linting PHP Code 
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: composer, phpcs
+
+      - name: Install Composer dependencies
+        run: composer install
+
+      - name: Linting Command
+        run: composer phpcs

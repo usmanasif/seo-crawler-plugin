@@ -18,6 +18,7 @@ class SEO_Link_Checker_Admin
     public function __construct()
     {
         add_action('wp_ajax_run_crawl', array($this, 'ajax_crawl_homepage'));
+        add_action('seo_link_checker_cron', array($this, 'crawl_homepage'));
     }
 
     public function display()
@@ -50,7 +51,7 @@ class SEO_Link_Checker_Admin
             echo '<p>No crawl results available.</p>';
         }
         echo '<form method="post" name="init_crawl" action="">
-                <input type="submit" value="Initiate Crawl" class="initate-crawl-btn" name="init_crawl">
+                <input type="submit" value="Initiate Crawl" class="initate-crawl" name="init_crawl">
               </form>';
     }
 
@@ -71,5 +72,33 @@ class SEO_Link_Checker_Admin
         
         $serialized_data = serialize($data);
         update_option('seo_crawl_hyperlinks',$serialized_data);
+        $this->make_homepage_html();
+        $this->delete_sitemap_file();
+    }
+
+    function make_homepage_html(){
+        try{
+            $wp_page_url = home_url();
+            $wp_page_content = file_get_contents($wp_page_url);
+
+            if ($wp_page_content !== false) {
+                $upload_dir = wp_upload_dir();
+                $file_path = $upload_dir['basedir'] . '/homepage.html';
+                $saved = file_put_contents($file_path, $wp_page_content);
+            } 
+        } catch(\Exception $e){
+            return false;
+        }
+    }
+
+    function delete_sitemap_file(){
+        try{
+            $file_path = ABSPATH . 'sitemap.html';
+            if (file_exists($file_path)) {
+                unlink($file_path);
+            } 
+        } catch(\Exception $e){
+            return false;
+        }
     }
 }

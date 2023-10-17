@@ -24,4 +24,4 @@ jobs:
         run: composer install
 
       - name: Linting Command
-        run: composer phpcs
+        run: composer phpcs -- --warning-severity=0

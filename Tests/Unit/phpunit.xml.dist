@@ -16,7 +16,9 @@
 	<testsuites>
 		<testsuite name="unit">
 			<directory suffix=".php">../Unit</directory>
-			<exclude>../../../../Tests/Unit/bootstrap.php</exclude>
+            <directory>./Tests/Unit</directory>
+            <directory>.src/admin</directory>
+			<exclude>../../../../Tests/Unit/oo.php</exclude>
 		</testsuite>
 	</testsuites>
 	<groups>

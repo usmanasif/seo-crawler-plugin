@@ -25,7 +25,12 @@
 		"wp-coding-standards/wpcs": "dev-develop",
 		"wp-media/phpunit": "^3"
     },
-    "autoload": {},
+    "autoload": {"psr-4": {
+        "ROCKET_WP_CRAWLER\\": "src/"
+    },
+    "classmap": [
+        "src/admin/"
+    ]},
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"
